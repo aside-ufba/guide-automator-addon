@@ -23,7 +23,7 @@ var contextMenu = require("sdk/context-menu");
 
 var popupGuideAutomator = require("sdk/panel").Panel({
 	contentURL: data.url("main.html"),
-	contentScriptFile: data.url("get-text.js")
+	contentScriptFile: data.url("scripts/popup-middleware.js")
 });
 
 //-- END IMPORT SDK's
@@ -44,8 +44,8 @@ var menuItem = contextMenu.Item({
 	label: "Get Css Selector",
 	image: data.url("icon-16.png"),
 	context: contextMenu.SelectorContext("*"),
-	contentScript: contentScript,
-	onMessage: onContextMessage
+	onMessage: onContextMessage,
+	contentScriptFile: [data.url("lib/jquery.min.js"), data.url("scripts/context-script.js")]
 });
 
 //-- END ADDON ELEMENT
