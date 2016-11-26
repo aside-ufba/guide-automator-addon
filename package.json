@@ -1,0 +1,18 @@
+{
+  "title": "Guide-Automator",
+  "name": "guide-automator",
+  "version": "0.0.1",
+  "description": "Help to build guide-automator(npm) blocks",
+  "main": "index.js",
+  "author": "Welbert Serra",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack",
+    "guide-automator",
+    "manual",
+    "guide"
+  ]
+}
