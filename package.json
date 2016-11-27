@@ -1,12 +1,12 @@
 {
   "title": "Guide-Automator",
   "name": "guide-automator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Help to build guide-automator(npm) blocks",
   "main": "index.js",
   "author": "Welbert Serra",
   "engines": {
-    "firefox": ">=38.0a1"
+    "firefox": ">=40.0"
   },
   "icon":"resource://guide-automator/data/icon-32.png" ,
   "license": "MIT",

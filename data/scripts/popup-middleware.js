@@ -2,12 +2,14 @@
 // message to main.js.
 // The message payload is the contents of the edit box.
 var textArea = document.getElementById("edit-box");
+var textCode = document.getElementById("box-code");
+textCode.value = "";
+
 textArea.addEventListener('keyup', function onkeyup(event) {
-	if (event.keyCode == 13) {
+	if(event.keyCode == 13) {
 		// Remove the newline.
-		text = textArea.value.replace(/(\r\n|\n|\r)/gm, "");
-		self.port.emit("text-entered", text);
-		textArea.value = '';
+		text = textArea.value;
+		self.port.emit("hide", text);
 	}
 }, false);
 // Listen for the "show" event being sent from the
@@ -17,9 +19,11 @@ textArea.addEventListener('keyup', function onkeyup(event) {
 // Set the focus to the text area so the user can
 // just start typing.
 self.port.on("show", function onShow() {
+	textArea.value = `\`\`\`javascript\n\n` + textCode.value + `\n\`\`\``;
 	textArea.focus();
 });
 
 self.port.on("text-received", function onShow(text) {
-	textArea.value += text;
+	if(text)
+		textCode.value += text;
 });

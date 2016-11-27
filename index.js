@@ -15,13 +15,13 @@ var popupGuideAutomator = require("sdk/panel").Panel({
 //-- EVENT OF ADDON ELEMENT
 
 function onbuttonGuideAutomatorClicked(state) {
-	tabs.open("https://www.npmjs.com/package/guide-automator");
-	//popupGuideAutomator.show();
+	//tabs.open("https://www.npmjs.com/package/guide-automator");
+	popupGuideAutomator.show();
 }
 
-function onContextMessage(cssSelector) {
-	clipboard.set(cssSelector);
-	popupGuideAutomator.port.emit("text-received", cssSelector);
+function onContextMessage(message) {
+	clipboard.set(message);
+	popupGuideAutomator.port.emit("text-received", '\t' + message + "\n");
 }
 
 //-- END EVENT OF ADDON ELEMENT
@@ -38,24 +38,66 @@ var button = buttons.ActionButton({
 	onClick: onbuttonGuideAutomatorClicked
 });
 
-var menuItem = contextMenu.Item({
-	label: "Get Css Selector",
+var menuLabelBefore = "> ";
+var menuItem = contextMenu.Menu({
+	label: "Guide-Automator (G)",
 	image: data.url("icon-16.png"),
 	context: contextMenu.SelectorContext("*"),
 	onMessage: onContextMessage,
-	contentScriptFile: [data.url("lib/css-logic.js"), data.url("scripts/context-script.js")]
+	accesskey: "G",
+	contentScriptFile: [data.url("lib/css-logic.js"), data.url("scripts/context-script.js")],
+	items: [
+    contextMenu.Item({
+			label: menuLabelBefore + "Get CssSelector",
+			data: "commandGetCssSelector"
+		}),
+    contextMenu.Item({
+			label: menuLabelBefore + "Get Url",
+			data: "commandGetUrl"
+		}),
+    contextMenu.Item({
+			label: menuLabelBefore + "Click",
+			data: "commandClick"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "TakeScreenshot",
+			data: "commandTakeScreenshot"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "TakeScreenshotOf",
+			data: "commandTakeScreenshotOf"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "FillIn",
+			data: "commandFillIn"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "Submit",
+			data: "commandSubmit"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "Wait",
+			data: "commandWait"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "Sleep",
+			data: "commandSleep"
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "Print",
+			data: "commandPrint"
+		})
+  ]
 });
 
 //-- END ADDON ELEMENT
 
 //-- popupGuideAutomator Comunication
 popupGuideAutomator.on("show", function() {
-	popupGuideAutomator.port.emit("text-received", "teste");
 	popupGuideAutomator.port.emit("show");
 });
 
-popupGuideAutomator.port.on("text-entered", function(text) {
-	console.log("Index-Port: " + text);
+popupGuideAutomator.port.on("hide", function(text) {
 	popupGuideAutomator.hide();
 });
 //-- END popupGuideAutomator Comunication
