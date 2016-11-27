@@ -79,6 +79,7 @@ function getGDTakeScreenshotOf(node) {
 function getGDFillIn(node) {
 	var cssSelector = getCssSelector(node);
 	var message = customPrompt('Fill in with: ');
+	if(!message) message = "";
 	return `fillIn('` + cssSelector + `','` + message.toString() + `');`;
 }
 
