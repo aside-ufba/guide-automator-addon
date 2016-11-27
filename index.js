@@ -1,16 +1,13 @@
 //-- EVENT OF ADDON ELEMENT
 
 function onbuttonGuideAutomatorClicked(state) {
-	//tabs.open("https://www.npmjs.com/package/guide-automator");
-	popupGuideAutomator.show();
+	tabs.open("https://www.npmjs.com/package/guide-automator");
+	//popupGuideAutomator.show();
 }
 
-var ContextScript = 'self.on("click", function (node, data) {' +
-	'  self.postMessage(node.value,data);' +
-	'});';
-
-function onContextMessage(node, data) {
-	console.log(node);
+function onContextMessage(cssSelector) {
+	clipboard.set(cssSelector);
+	popupGuideAutomator.port.emit("text-received", cssSelector);
 }
 
 //-- END EVENT OF ADDON ELEMENT
@@ -20,7 +17,7 @@ var data = require("sdk/self").data;
 var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var contextMenu = require("sdk/context-menu");
-
+var clipboard = require("sdk/clipboard");
 var popupGuideAutomator = require("sdk/panel").Panel({
 	contentURL: data.url("main.html"),
 	contentScriptFile: data.url("scripts/popup-middleware.js")
@@ -45,19 +42,19 @@ var menuItem = contextMenu.Item({
 	image: data.url("icon-16.png"),
 	context: contextMenu.SelectorContext("*"),
 	onMessage: onContextMessage,
-	contentScriptFile: [data.url("lib/jquery.min.js"), data.url("scripts/context-script.js")]
+	contentScriptFile: data.url("scripts/context-script.js")
 });
 
 //-- END ADDON ELEMENT
 
 //-- popupGuideAutomator Comunication
 popupGuideAutomator.on("show", function() {
-	popupGuideAutomator.port.emit("text-received");
+	popupGuideAutomator.port.emit("text-received", "teste");
 	popupGuideAutomator.port.emit("show");
 });
 
 popupGuideAutomator.port.on("text-entered", function(text) {
-	console.log(text);
+	console.log("Index-Port: " + text);
 	popupGuideAutomator.hide();
 });
 //-- END popupGuideAutomator Comunication

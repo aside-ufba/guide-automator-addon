@@ -20,6 +20,6 @@ self.port.on("show", function onShow() {
 	textArea.focus();
 });
 
-self.port.on("text-received", function onShow() {
-	textArea.value += "Write some text";
+self.port.on("text-received", function onShow(text) {
+	textArea.value += text;
 });
