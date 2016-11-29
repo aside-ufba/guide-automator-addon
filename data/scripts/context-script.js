@@ -4,41 +4,43 @@ self.on("click", function(node, data) {
 
 //GD = Guide-Automator Functions
 function parserCommand(node, data) {
+	data = JSON.parse(data);
 	var result = null;
-	switch(data) {
-		case "commandGetCssSelector":
+	switch(data.command) {
+		case "GetCssSelector":
 			result = getCssSelector(node);
 			break;
-		case "commandGetUrl":
+		case "GetUrl":
 			result = getGDUrl();
 			break;
-		case "commandClick":
+		case "Click":
 			result = getGDClick(node);
 			break;
-		case "commandTakeScreenshot":
+		case "TakeScreenshot":
 			result = getGDTakeScreenshot();
 			break;
 		case "commandTakeScreenshotOf":
 			result = getGDTakeScreenshotOf(node);
 			break;
-		case "commandFillIn":
+		case "FillIn":
 			result = getGDFillIn(node);
 			break;
-		case "commandSubmit":
+		case "Submit":
 			result = getGDSubmit(node);
 			break;
-		case "commandWait":
+		case "Wait":
 			result = getGDWait(node);
 			break;
-		case "commandSleep":
+		case "Sleep":
 			result = getGDSleep();
 			break;
-		case "commandPrint":
+		case "Print":
 			result = getGDPrint();
 			break;
 		default:
 			result = null;
 	}
+
 	return result;
 }
 
@@ -69,7 +71,7 @@ function getGDTakeScreenshotOf(node) {
 	if(isNullOrEmpty(width))
 		width = "60%";
 
-	return `takeScreenshot('` + cssSelector + `',` +
+	return `takeScreenshotOf('` + cssSelector + `',` +
 		crop.toString() + `,` +
 		outline.toString() + `,` +
 		`' + width + '` +

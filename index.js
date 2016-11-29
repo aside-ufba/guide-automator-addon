@@ -19,7 +19,11 @@ function onbuttonGuideAutomatorClicked(state) {
 	popupGuideAutomator.show();
 }
 
-function onContextMessage(message) {
+function onContextGetCssSelector(message) {
+	clipboard.set(message);
+}
+
+function onContextGDFunction(message) {
 	clipboard.set(message);
 	popupGuideAutomator.port.emit("text-received", '\t' + message + "\n");
 }
@@ -31,66 +35,98 @@ var button = buttons.ActionButton({
 	id: "guide-automator-link",
 	label: "Visit Guide-Automator npm",
 	icon: {
-		"16": data.url("./icon-16.png"),
-		"32": data.url("./icon-32.png"),
-		"64": data.url("./icon-64.png")
+		"16": data.url("icon-16.png"),
+		"32": data.url("icon-32.png"),
+		"64": data.url("icon-64.png")
 	},
 	onClick: onbuttonGuideAutomatorClicked
 });
 
+
+var MenuItemCssSelector = contextMenu.Item({
+	label: "Get CssSelector (C)",
+	data: JSON.stringify({
+		command: "GetCssSelector"
+	}),
+	image: data.url("icon-16.png"),
+	context: contextMenu.SelectorContext("*"),
+	onMessage: onContextGetCssSelector,
+	accesskey: "C",
+	contentScriptFile: [data.url("lib/css-logic.js"), data.url("scripts/context-script.js")]
+});
+
 var menuLabelBefore = "> ";
-var menuItem = contextMenu.Menu({
+var menuItemMain = contextMenu.Menu({
 	label: "Guide-Automator (G)",
 	image: data.url("icon-16.png"),
 	context: contextMenu.SelectorContext("*"),
-	onMessage: onContextMessage,
+	onMessage: onContextGDFunction,
 	accesskey: "G",
 	contentScriptFile: [data.url("lib/css-logic.js"), data.url("scripts/context-script.js")],
 	items: [
     contextMenu.Item({
-			label: menuLabelBefore + "Get CssSelector",
-			data: "commandGetCssSelector"
-		}),
-    contextMenu.Item({
 			label: menuLabelBefore + "Get Url",
-			data: "commandGetUrl"
+			data: JSON.stringify({
+				command: "GetUrl"
+			})
 		}),
     contextMenu.Item({
 			label: menuLabelBefore + "Click",
-			data: "commandClick"
+			data: JSON.stringify({
+				command: "Click"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "TakeScreenshot",
-			data: "commandTakeScreenshot"
+			data: JSON.stringify({
+				command: "TakeScreenshot"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "TakeScreenshotOf",
-			data: "commandTakeScreenshotOf"
+			data: JSON.stringify({
+				command: "TakeScreenshotOf"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "FillIn",
-			data: "commandFillIn"
+			data: JSON.stringify({
+				command: "FillIn"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "Submit",
-			data: "commandSubmit"
+			data: JSON.stringify({
+				command: "Submit"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "Wait",
-			data: "commandWait"
+			data: JSON.stringify({
+				command: "Wait"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "Sleep",
-			data: "commandSleep"
+			data: JSON.stringify({
+				command: "Sleep"
+			})
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "Print",
-			data: "commandPrint"
+			data: JSON.stringify({
+				command: "Print"
+			})
 		})
   ]
 });
 
+
 //-- END ADDON ELEMENT
+
+//-- Context Menu Comunication
+
+//-- END Context Menu Comunication
 
 //-- popupGuideAutomator Comunication
 popupGuideAutomator.on("show", function() {
@@ -99,6 +135,10 @@ popupGuideAutomator.on("show", function() {
 
 popupGuideAutomator.port.on("hide", function(text) {
 	popupGuideAutomator.hide();
+});
+
+popupGuideAutomator.port.on("clear", function() {
+
 });
 //-- END popupGuideAutomator Comunication
 //
