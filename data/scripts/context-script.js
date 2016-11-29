@@ -19,7 +19,7 @@ function parserCommand(node, data) {
 		case "TakeScreenshot":
 			result = getGDTakeScreenshot();
 			break;
-		case "commandTakeScreenshotOf":
+		case "TakeScreenshotOf":
 			result = getGDTakeScreenshotOf(node);
 			break;
 		case "FillIn":
@@ -73,9 +73,9 @@ function getGDTakeScreenshotOf(node) {
 
 	return `takeScreenshotOf('` + cssSelector + `',` +
 		crop.toString() + `,` +
-		outline.toString() + `,` +
-		`' + width + '` +
-		`);`;
+		outline.toString() + `,'` +
+		width +
+		`');`;
 }
 
 function getGDFillIn(node) {
