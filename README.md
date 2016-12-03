@@ -8,10 +8,10 @@ Extension created using [jpm](https://www.npmjs.com/package/jpm)
 
 Right-click an element on a web page, select menu "Guide-Automator", select any option and it will be copied to your clipboard with npm guide-automator's format.
 
-![Context](extras/example-fillin.png)
+![Context](https://addons.cdn.mozilla.net/user-media/previews/full/180/180620.png?modified=1480737319)
 
-![Context](extras/example-fillin2.png)
+![Context](https://addons.cdn.mozilla.net/user-media/previews/full/180/180619.png)
 
 You can view all generated codes by clicking the button on the tool bar extension.
 
-![Context](extras/output-box.png)
+![Context](https://addons.cdn.mozilla.net/user-media/previews/full/180/180512.png?modified=1480737315)
