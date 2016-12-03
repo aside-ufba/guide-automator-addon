@@ -52,7 +52,7 @@ var MenuItemCssSelector = contextMenu.Item({
 	context: contextMenu.SelectorContext("*"),
 	onMessage: onContextGetCssSelector,
 	accesskey: "C",
-	contentScriptFile: [data.url("lib/css-logic.js"), data.url("scripts/context-script.js")]
+	contentScriptFile: [data.url("lib/toast.min.js"), data.url("lib/css-logic.js"), data.url("scripts/context-script.js")]
 });
 
 var menuLabelBefore = "> ";
@@ -62,58 +62,67 @@ var menuItemMain = contextMenu.Menu({
 	context: contextMenu.SelectorContext("*"),
 	onMessage: onContextGDFunction,
 	accesskey: "G",
-	contentScriptFile: [data.url("lib/css-logic.js"), data.url("scripts/context-script.js")],
+	contentScriptFile: [data.url("lib/toast.min.js"), data.url("lib/css-logic.js"), data.url("scripts/context-script.js")],
 	items: [
     contextMenu.Item({
-			label: menuLabelBefore + "Get Url",
+			label: menuLabelBefore + "Get Url (U)",
+			accesskey: "U",
 			data: JSON.stringify({
 				command: "GetUrl"
 			})
 		}),
     contextMenu.Item({
-			label: menuLabelBefore + "Click",
+			label: menuLabelBefore + "Click (L)",
+			accesskey: "L",
 			data: JSON.stringify({
 				command: "Click"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "TakeScreenshot",
+			label: menuLabelBefore + "TakeScreenshot (T)",
+			accesskey: "T",
 			data: JSON.stringify({
 				command: "TakeScreenshot"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "TakeScreenshotOf",
+			label: menuLabelBefore + "TakeScreenshotOf (S)",
+			accesskey: "S",
 			data: JSON.stringify({
 				command: "TakeScreenshotOf"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "FillIn",
+			label: menuLabelBefore + "FillIn (F)",
+			accesskey: "F",
 			data: JSON.stringify({
 				command: "FillIn"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "Submit",
+			label: menuLabelBefore + "Submit (B)",
+			accesskey: "U",
 			data: JSON.stringify({
 				command: "Submit"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "Wait",
+			label: menuLabelBefore + "Wait (W)",
+			accesskey: "W",
 			data: JSON.stringify({
 				command: "Wait"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "Sleep",
+			label: menuLabelBefore + "Sleep (E)",
+			accesskey: "E",
 			data: JSON.stringify({
 				command: "Sleep"
 			})
 		}),
 		contextMenu.Item({
-			label: menuLabelBefore + "Print",
+			label: menuLabelBefore + "Print (P)",
+			accesskey: "P",
 			data: JSON.stringify({
 				command: "Print"
 			})

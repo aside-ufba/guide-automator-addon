@@ -40,7 +40,7 @@ function parserCommand(node, data) {
 		default:
 			result = null;
 	}
-
+	toast("Code copied to clipboard!");
 	return result;
 }
 
@@ -53,6 +53,9 @@ function getGDUrl() {
 }
 
 function getGDClick(node) {
+	//Simulação da ação
+	node.click();
+
 	return `click('` + getCssSelector(node) + `');`;
 }
 
@@ -82,6 +85,10 @@ function getGDFillIn(node) {
 	var cssSelector = getCssSelector(node);
 	var message = customPrompt('Fill in with: ');
 	if(!message) message = "";
+
+	//Simulação da ação
+	node.value = message;
+
 	return `fillIn('` + cssSelector + `','` + message.toString() + `');`;
 }
 
@@ -93,22 +100,41 @@ function getGDSubmit(node) {
 	if(tmpNode.localName === "form")
 		node = tmpNode;
 
+	//Simulação da ação
 	var cssSelector = getCssSelector(node);
+	node.submit();
+
 	return `submit('` + cssSelector + `');`
 }
 
 function getGDWait(node) {
+	var cursor = document.body.style.cursor;
+	document.body.style.cursor = 'progress';
+
 	var cssSelector = getCssSelector(node);
 	var timeOut = customPrompt("Time limit for wait of element.[ms] (Default: 5000)");
 	if(isNullOrEmpty(timeOut))
 		timeOut = '5000';
+
+	setTimeout(function() {
+		document.body.style.cursor = cursor;
+	}, 1000);
+
 	return `wait('` + cssSelector + `',` + timeOut + `);`;
 }
 
 function getGDSleep() {
+	var cursor = document.body.style.cursor;
+	document.body.style.cursor = 'progress';
+
 	var time = customPrompt("Time to sleep.[ms]");
 	if(isNullOrEmpty(time))
 		time = '1000';
+
+	setTimeout(function() {
+		document.body.style.cursor = cursor;
+	}, 1000);
+
 	return `sleep('` + time.toString().trim() + `');`;
 }
 
@@ -137,4 +163,18 @@ function isNullOrEmpty(variable) {
 
 function setReturn(message) {
 	self.postMessage(message);
+}
+
+function toast(message) {
+	var toast = new iqwerty.toast.Toast(message, {
+		settings: {
+			duration: 2000
+		},
+		style: {
+			main: {
+				width: '25%'
+			}
+		}
+
+	});
 }
