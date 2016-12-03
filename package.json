@@ -1,7 +1,7 @@
 {
   "title": "Guide-Automator",
   "name": "guide-automator",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Help to build guide-automator(npm) blocks",
   "main": "index.js",
   "author": "Welbert Serra",

@@ -1,3 +1,5 @@
+var outlineElements = [];
+
 self.on("click", function(node, data) {
 	setReturn(parserCommand(node, data));
 });
@@ -5,7 +7,7 @@ self.on("click", function(node, data) {
 //GD = Guide-Automator Functions
 function parserCommand(node, data) {
 	data = JSON.parse(data);
-	var result = null;
+	var result = "";
 	switch(data.command) {
 		case "GetCssSelector":
 			result = getCssSelector(node);
@@ -37,10 +39,14 @@ function parserCommand(node, data) {
 		case "Print":
 			result = getGDPrint();
 			break;
+		case "Outline":
+			result = getGDOutline(node);
+			break;
 		default:
-			result = null;
+			result = "";
 	}
-	toast("Code copied to clipboard!");
+	if(result !== "")
+		toast("Code copied to clipboard!");
 	return result;
 }
 
@@ -61,24 +67,53 @@ function getGDClick(node) {
 
 function getGDTakeScreenshot() {
 	var width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
-	if(!isNullOrEmpty(width))
-		return `takeScreenshot('` + width + `');`;
-	return "takeScreenshot();";
+	if(outlineElements.length === 0) {
+		if(!isNullOrEmpty(width))
+			return `takeScreenshot('` + width + `');`;
+
+		return "takeScreenshot();";
+	} else {
+		if(isNullOrEmpty(width))
+			width = "60%";
+		var selectors = removeAllOutlines();
+		return `takeScreenshotOf([` + selectors + `],` +
+			'false' + `,` +
+			'true' + `,'` +
+			width +
+			`');`;
+	}
 }
 
 function getGDTakeScreenshotOf(node) {
-	var cssSelector = getCssSelector(node);
-	var crop = customYesNoQuestion("Want to crop the image based on the element?");
-	var outline = customYesNoQuestion("Want to outline the element?");
-	var width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
-	if(isNullOrEmpty(width))
-		width = "60%";
+	var width, cssSelector;
+	if(outlineElements.length === 0) {
+		cssSelector = getCssSelector(node);
+		var crop = customYesNoQuestion("Want to crop the image based on the element?");
+		var outline = customYesNoQuestion("Want to outline the element?");
+		width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
+		if(isNullOrEmpty(width))
+			width = "60%";
 
-	return `takeScreenshotOf('` + cssSelector + `',` +
-		crop.toString() + `,` +
-		outline.toString() + `,'` +
-		width +
-		`');`;
+		return `takeScreenshotOf('` + cssSelector + `',` +
+			crop.toString() + `,` +
+			outline.toString() + `,'` +
+			width +
+			`');`;
+
+	} else {
+
+		width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
+		if(isNullOrEmpty(width))
+			width = "60%";
+		outlineElements.push(node);
+
+		var selectors = removeAllOutlines();
+		return `takeScreenshotOf([` + selectors + `],` +
+			'false' + `,` +
+			'true' + `,'` +
+			width +
+			`');`;
+	}
 }
 
 function getGDFillIn(node) {
@@ -104,7 +139,7 @@ function getGDSubmit(node) {
 	var cssSelector = getCssSelector(node);
 	node.submit();
 
-	return `submit('` + cssSelector + `');`
+	return `submit('` + cssSelector + `');`;
 }
 
 function getGDWait(node) {
@@ -143,6 +178,14 @@ function getGDPrint() {
 	return `console.print('` + message.toString() + `');`;
 }
 
+function getGDOutline(node) {
+	node.style.outline = 'solid red 3px';
+	outlineElements.push(node);
+	return "";
+}
+
+
+//AUX FUNCTIONS
 function customPrompt(message, defaultValue) {
 	return prompt(message, defaultValue);
 }
@@ -156,9 +199,20 @@ function customYesNoQuestion(message) {
 }
 
 function isNullOrEmpty(variable) {
-	if(variable == null || variable.toString().trim() === "")
+	if(variable === null || variable.toString().trim() === "")
 		return true;
 	return false;
+}
+
+function removeAllOutlines() {
+	var selectors = [];
+	var nodeOutline = outlineElements.pop();
+	while(nodeOutline) {
+		selectors.push(`'` + getCssSelector(nodeOutline) + `'`);
+		nodeOutline.style.outline = '';
+		nodeOutline = outlineElements.pop();
+	}
+	return selectors;
 }
 
 function setReturn(message) {
@@ -175,6 +229,5 @@ function toast(message) {
 				width: '25%'
 			}
 		}
-
 	});
 }

@@ -5,7 +5,9 @@ var tabs = require("sdk/tabs");
 var contextMenu = require("sdk/context-menu");
 var clipboard = require("sdk/clipboard");
 var popupGuideAutomator = require("sdk/panel").Panel({
-	contentURL: data.url("main.html"),
+	width: 580,
+	height: 380,
+	contentURL: data.url("html/popup-button.html"),
 	contentScriptFile: data.url("scripts/popup-middleware.js")
 });
 //var CssLogic = require("resource:///devtools/server/css-logic.js");
@@ -16,7 +18,9 @@ var popupGuideAutomator = require("sdk/panel").Panel({
 
 function onbuttonGuideAutomatorClicked(state) {
 	//tabs.open("https://www.npmjs.com/package/guide-automator");
-	popupGuideAutomator.show();
+	popupGuideAutomator.show({
+		position: button
+	});
 }
 
 function onContextGetCssSelector(message) {
@@ -24,8 +28,10 @@ function onContextGetCssSelector(message) {
 }
 
 function onContextGDFunction(message) {
-	clipboard.set(message);
-	popupGuideAutomator.port.emit("text-received", '\t' + message + "\n");
+	if(message !== "") {
+		clipboard.set(message);
+		popupGuideAutomator.port.emit("text-received", '\t' + message + "\n");
+	}
 }
 
 //-- END EVENT OF ADDON ELEMENT
@@ -55,6 +61,8 @@ var MenuItemCssSelector = contextMenu.Item({
 	contentScriptFile: [data.url("lib/toast.min.js"), data.url("lib/css-logic.js"), data.url("scripts/context-script.js")]
 });
 
+//Shortcut used
+//C-G-U-L-T-S-F-B-W-E-P-O
 var menuLabelBefore = "> ";
 var menuItemMain = contextMenu.Menu({
 	label: "Guide-Automator (G)",
@@ -76,6 +84,13 @@ var menuItemMain = contextMenu.Menu({
 			accesskey: "L",
 			data: JSON.stringify({
 				command: "Click"
+			})
+		}),
+		contextMenu.Item({
+			label: menuLabelBefore + "Outline Element (O)",
+			accesskey: "O",
+			data: JSON.stringify({
+				command: "Outline"
 			})
 		}),
 		contextMenu.Item({
@@ -101,7 +116,7 @@ var menuItemMain = contextMenu.Menu({
 		}),
 		contextMenu.Item({
 			label: menuLabelBefore + "Submit (B)",
-			accesskey: "U",
+			accesskey: "B",
 			data: JSON.stringify({
 				command: "Submit"
 			})
