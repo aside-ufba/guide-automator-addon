@@ -1,23 +1,116 @@
 <html>
 
 <head>
+  <link href="w3.css" type="text/css" rel="stylesheet">
   <link href="popup-button.css" type="text/css" rel="stylesheet">
-
 </head>
 
-<body>
-  <div id="main-content">
-    <div id="left-panel">
+<body class="w3-black">
+  <div id="left-panel" class="w3-sidenav w3-black w3-card-2">
+    <ul class="w3-ul w3-small">
+      <li>
+        <h6>Commands</h6></li>
+      <li class="w3-hover-grey tooltip" id="GDget">
+        get
+        <span class="tooltiptext">
+          Description: Url to access <br />
+          Params:  	&lt;url&gt; <br />
+          Example: <br />
+              get('https://github.com/welbert');
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDclick">
+        click
+        <span class="tooltiptext">
+          Description: Click on element <br />
+          Params: &lt;cssSelector&gt; <br />
+          Example: <br />
+              click('.unstarred > button:nth-child(2)'); <br />
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDtakeScreenshot">
+        takeScreenshot
+        <span class="tooltiptext">
+          Description: Take Screenshot <br />
+          Params: [imageWidth] <br />
+          Example: <br />
+              takeScreenshot(); <br />
+              takeScreenshot('10%'); <br />
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDtakeScreenshotOf">
+        takeScreenshotOf
+        <span class="tooltiptext">
+          Description: Take Screenshot of specific element <br />
+          Params: &lt;cssSelector&gt;, [crop], [outline], [imageWidth] <br />
+          Example: <br />
+              takeScreenshotOf('#user-content-guideautomator'); <br />
+              takeScreenshotOf('#user-content-guideautomator',false,true); <br />
+              takeScreenshotOf(['#user-content-guideautomator','.avatar'],false,true); //Multiple cssSelector only for outline
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDfillIn">
+        fillIn
+        <span class="tooltiptext">
+          Description: Fill in field element <br />
+          Params: &lt;cssSelector&gt;, &lt;input&gt; <br />
+          Example: <br />
+              fillIn('.header-search-input','guide-automator'); <br />
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDsubmit">
+        submit
+        <span class="tooltiptext">
+          Description: Submit a form <br />
+          Params: &lt;cssSelector&gt; <br />
+          Example: <br />
+              submit('.js-site-search-form');
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDwait">
+        wait
+        <span class="tooltiptext">
+          Description: Wait element load on page <br />
+          Params: &lt;cssSelector&gt;, [timeOut] <br />
+          Example: <br />
+              wait('.commit-author-section'); <br />
+              wait('.commit-author-section',2000);
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDsleep">
+        sleep
+        <span class="tooltiptext">
+          Description: Sleep for a while <br />
+          Params: &lt;milleseconds&gt; <br />
+          Example: <br />
+              sleep(1000);
+        </span>
+      </li>
+      <li class="w3-hover-grey tooltip" id="GDprint">
+        console.print
+        <span class="tooltiptext">
+          Description: Print text on <br />markdown file using javascript blocks <br />
+          Params: &lt;text&gt; <br />
+          Example: <br />
+              console.print('# Title');
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div id="right-panel">
+    <div class="w3-container">
+      <div id="box-text-area">
+        <textarea rows="17" cols="40" id="edit-box"></textarea>
+      </div>
     </div>
 
-    <div id="right-panel">
-      <textarea rows="18" cols="45" id="edit-box"></textarea>
-      <textarea id="box-code" hidden="true"></textarea>
-    </div>
+    <div class="w3-row-padding w3-container">
+      <div id="bottom-panel">
+        <button class="" id="Clear">Clear</button>
+        <button class="" id="Copy">Copy</button>
 
-    <div id="bottom-panel">
-      <button type="button" id="Clear">Clear</button>
-      <button type="button" id="npm-package">Guide-Automator</button>
+        <button class="" id="NPM">Guide-Automator</button>
+      </div>
     </div>
   </div>
 </body>

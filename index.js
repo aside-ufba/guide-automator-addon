@@ -6,11 +6,12 @@ var {
 var contextMenu = require("sdk/context-menu");
 var clipboard = require("sdk/clipboard");
 var popupGuideAutomator = require("sdk/panel").Panel({
-	width: 580,
-	height: 380,
+	width: 620,
+	height: 450,
 	contentURL: data.url("html/popup-button.html"),
 	contentScriptFile: data.url("scripts/popup-middleware.js"),
-	contentStyleFile: [data.url("lib/w3.css"), data.url("html/popup-button.css")],
+	contentStyleFile: [data.url("lib/w3.css"),
+	 										data.url("css/popup-button.css")],
 	onHide: onPopupGuideAutomatorHide
 });
 //var CssLogic = require("resource:///devtools/server/css-logic.js");
@@ -34,7 +35,7 @@ function onContextGetCssSelector(message) {
 function onContextGDFunction(message) {
 	if(message !== "") {
 		clipboard.set(message);
-		popupGuideAutomator.port.emit("text-received", '\t' + message + "\n");
+		popupGuideAutomator.port.emit("text-received", '\t' + message);
 	}
 }
 
@@ -163,6 +164,12 @@ popupGuideAutomator.on("show", function() {
 
 popupGuideAutomator.port.on("hideMessage", function(text) {
 	popupGuideAutomator.hide();
+});
+
+popupGuideAutomator.port.on("CopyMessage", function(text) {
+	if(text !== "") {
+		clipboard.set(text);
+	}
 });
 
 function onPopupGuideAutomatorHide() {
