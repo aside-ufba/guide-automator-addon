@@ -14,4 +14,4 @@ Right-click an element on a web page, select menu "Guide-Automator", select any 
 
 You can view all generated codes by clicking the button on the tool bar extension.
 
-![Context](https://addons.cdn.mozilla.net/user-media/previews/full/180/180640.png?modified=1480779621)
+![Context](https://addons.cdn.mozilla.net/user-media/previews/full/180/180647.png?modified=1480797935)
