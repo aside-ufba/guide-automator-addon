@@ -1,0 +1,42 @@
+textarea {
+    margin: 10px;
+}
+
+body {
+    background-color: grey;
+}
+
+#main-content {
+    width: 100%;
+    height: 100%;
+}
+
+#left-panel {
+    width: 30%;
+    height: 90%;
+    float: left;
+    background-color: red;
+}
+
+#right-panel {
+    width: 70%;
+    height: 90%;
+    float: right;
+    background-color: blue;
+}
+
+#bottom-panel {
+    width: 97%;
+    height: 11%;
+    bottom: 0;
+    position: fixed;
+    background-color: green;
+}
+
+#npm-package {
+    float: right;
+    bottom: 0;
+    right: 10;
+    width: 20%;
+    position: fixed;
+}

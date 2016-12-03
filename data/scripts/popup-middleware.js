@@ -6,7 +6,7 @@ textCode.value = "";
 textArea.addEventListener('keyup', function onkeyup(event) {
 	if(event.keyCode == 13) {
 		text = textArea.value;
-		self.port.emit("hide", text);
+		self.port.emit("hideMessage", text);
 	}
 }, false);
 

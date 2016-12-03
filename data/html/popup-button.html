@@ -1,17 +1,25 @@
 <html>
+
 <head>
-    <style type="text/css" media="all">
-      textarea {
-        margin: 10px;
-      }
-      body {
-        background-color: gray;
-      }
-    </style>
-  </head>
-  <body>
-    <textarea rows="20" cols="75" id="edit-box"></textarea>
-     <button type="button" id="Clear">Clear</button>
-    <textarea id="box-code" hidden="true"></textarea>
-  </body>
+  <link href="popup-button.css" type="text/css" rel="stylesheet">
+
+</head>
+
+<body>
+  <div id="main-content">
+    <div id="left-panel">
+    </div>
+
+    <div id="right-panel">
+      <textarea rows="18" cols="45" id="edit-box"></textarea>
+      <textarea id="box-code" hidden="true"></textarea>
+    </div>
+
+    <div id="bottom-panel">
+      <button type="button" id="Clear">Clear</button>
+      <button type="button" id="npm-package">Guide-Automator</button>
+    </div>
+  </div>
+</body>
+
 </html>

@@ -1,14 +1,17 @@
 //-- IMPORT SDK's
 var data = require("sdk/self").data;
-var buttons = require('sdk/ui/button/action');
-var tabs = require("sdk/tabs");
+var {
+	ToggleButton
+} = require('sdk/ui/button/toggle');
 var contextMenu = require("sdk/context-menu");
 var clipboard = require("sdk/clipboard");
 var popupGuideAutomator = require("sdk/panel").Panel({
 	width: 580,
 	height: 380,
 	contentURL: data.url("html/popup-button.html"),
-	contentScriptFile: data.url("scripts/popup-middleware.js")
+	contentScriptFile: data.url("scripts/popup-middleware.js"),
+	contentStyleFile: [data.url("lib/w3.css"), data.url("html/popup-button.css")],
+	onHide: onPopupGuideAutomatorHide
 });
 //var CssLogic = require("resource:///devtools/server/css-logic.js");
 
@@ -17,10 +20,11 @@ var popupGuideAutomator = require("sdk/panel").Panel({
 //-- EVENT OF ADDON ELEMENT
 
 function onbuttonGuideAutomatorClicked(state) {
-	//tabs.open("https://www.npmjs.com/package/guide-automator");
-	popupGuideAutomator.show({
-		position: button
-	});
+	if(state.checked) {
+		popupGuideAutomator.show({
+			position: button
+		});
+	}
 }
 
 function onContextGetCssSelector(message) {
@@ -37,7 +41,7 @@ function onContextGDFunction(message) {
 //-- END EVENT OF ADDON ELEMENT
 
 //-- ADDON ELEMENT
-var button = buttons.ActionButton({
+var button = ToggleButton({
 	id: "guide-automator-link",
 	label: "Visit Guide-Automator npm",
 	icon: {
@@ -45,7 +49,7 @@ var button = buttons.ActionButton({
 		"32": data.url("icon-32.png"),
 		"64": data.url("icon-64.png")
 	},
-	onClick: onbuttonGuideAutomatorClicked
+	onChange: onbuttonGuideAutomatorClicked
 });
 
 
@@ -157,9 +161,15 @@ popupGuideAutomator.on("show", function() {
 	popupGuideAutomator.port.emit("show");
 });
 
-popupGuideAutomator.port.on("hide", function(text) {
+popupGuideAutomator.port.on("hideMessage", function(text) {
 	popupGuideAutomator.hide();
 });
+
+function onPopupGuideAutomatorHide() {
+	button.state('window', {
+		checked: false
+	});
+}
 
 popupGuideAutomator.port.on("clear", function() {
 
