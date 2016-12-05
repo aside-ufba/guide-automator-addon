@@ -35,7 +35,7 @@ function onContextGetCssSelector(message) {
 function onContextGDFunction(message) {
 	if(message !== "") {
 		clipboard.set(message);
-		popupGuideAutomator.port.emit("text-received", '\t' + message);
+		popupGuideAutomator.port.emit("text-received", message);
 	}
 }
 
