@@ -9,7 +9,7 @@ var popupGuideAutomator = require("sdk/panel").Panel({
 	width: 620,
 	height: 450,
 	contentURL: data.url("html/popup-button.html"),
-	contentScriptFile: data.url("scripts/popup-middleware.js"),
+	contentScriptFile: [data.url("lib/toast.min.js"), data.url("scripts/popup-middleware.js")],
 	contentStyleFile: [data.url("lib/w3.css"),
 	 										data.url("css/popup-button.css")],
 	onHide: onPopupGuideAutomatorHide

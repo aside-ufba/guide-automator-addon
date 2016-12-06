@@ -28,6 +28,7 @@ function executeCommandButton(buttonId) {
 			break;
 		case "Copy":
 			text = getTextWithTags().toString();
+			toast("Code copied to clipboard!");
 			self.port.emit("CopyMessage", text);
 			break;
 		case "NPM":
@@ -68,7 +69,7 @@ function executeCommandGD(commandId) {
 			addText("fillIn('CssSelector','Text');");
 			break;
 		case "GDsubmit":
-			addText("Submit('CssSelector');");
+			addText("submit('CssSelector');");
 			break;
 		case "GDwait":
 			addText("wait('CssSelector',timeLimit);");
@@ -97,4 +98,17 @@ function addText(text) {
 
 function getTextWithTags() {
 	return `\`\`\`javascript\n\n` + textArea.value + `\n\`\`\``;
+}
+
+function toast(message) {
+	var toast = new iqwerty.toast.Toast(message, {
+		settings: {
+			duration: 2000
+		},
+		style: {
+			main: {
+				width: '25%'
+			}
+		}
+	});
 }

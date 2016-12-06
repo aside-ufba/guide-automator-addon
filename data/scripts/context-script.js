@@ -135,9 +135,11 @@ function getGDSubmit(node) {
 	if(tmpNode.localName === "form")
 		node = tmpNode;
 
-	//Simulação da ação
 	var cssSelector = getCssSelector(node);
-	node.submit();
+	//Simulação da ação
+	try {
+		node.submit();
+	} catch(e) {}
 
 	return `submit('` + cssSelector + `');`;
 }
