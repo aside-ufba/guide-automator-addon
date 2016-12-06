@@ -15,6 +15,7 @@ body {
 #edit-box {
     background-color: white;
     color: black;
+    font-size: 12px;
 }
 
 #left-panel {
@@ -39,9 +40,12 @@ body {
     z-index: 1;
 }
 
-.tooltip:hover .tooltiptext {
-    visibility: visible;
+.tooltiptext {
+    border-color: grey;
+    border-width: 2px;
+    border-style: solid;
 }
 
-
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

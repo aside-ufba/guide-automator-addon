@@ -1,5 +1,6 @@
 var textArea = document.getElementById("edit-box");
-
+console.log("aew");
+/*
 self.port.on("show", function onShow() {
 	textArea.focus();
 });
@@ -8,10 +9,12 @@ self.port.on("text-received", function onShow(text) {
 	if(text)
 		addText(text);
 });
+*/
 
 //Buttons
 document.querySelectorAll('#bottom-panel > button')
 	.forEach(element => {
+		console.log("aew1");
 		element
 			.className = ' w3-btn w3-small w3-black w3-border w3-hover-border-white';
 		element

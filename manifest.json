@@ -1,0 +1,30 @@
+{
+    "description": "Help to build guide-automator(npm) blocks",
+    "manifest_version": 2,
+    "name": "Guide-Automator",
+    "version": "0.0.8",
+    "homepage_url": "https://github.com/welbert/guide-automator-addon",
+    "icons": {
+        "32": "icons/icon-32.png"
+    },
+    "author": "Welbert Serra",
+
+    "background": {
+        "scripts": ["index.js"]
+    },
+
+    "permissions": [
+        "activeTab",
+        "contextMenus"
+    ],
+
+    "browser_action": {
+        "browser_style": true,
+        "default_popup": "popup/popup-button.html",
+        "default_title": "Guide-Automator",
+        "default_icon": {
+            "16": "icons/icon-16.png",
+            "32": "icons/icon-32.png"
+        }
+    }
+}
