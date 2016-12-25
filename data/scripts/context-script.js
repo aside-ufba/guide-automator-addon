@@ -1,4 +1,5 @@
 var outlineElements = [];
+var pageContext = '';
 
 self.on("click", function(node, data) {
 	setReturn(parserCommand(node, data));
@@ -16,22 +17,27 @@ function parserCommand(node, data) {
 			result = getGDUrl();
 			break;
 		case "Click":
-			result = getGDClick(node);
+			result = checkPageContext(node);
+			result += getGDClick(node);
 			break;
 		case "TakeScreenshot":
 			result = getGDTakeScreenshot();
 			break;
 		case "TakeScreenshotOf":
-			result = getGDTakeScreenshotOf(node);
+			result = checkPageContext(node);
+			result += getGDTakeScreenshotOf(node);
 			break;
 		case "FillIn":
-			result = getGDFillIn(node);
+			result = checkPageContext(node);
+			result += getGDFillIn(node);
 			break;
 		case "Submit":
-			result = getGDSubmit(node);
+			result = checkPageContext(node);
+			result += getGDSubmit(node);
 			break;
 		case "Wait":
-			result = getGDWait(node);
+			result = checkPageContext(node);
+			result += getGDWait(node);
 			break;
 		case "Sleep":
 			result = getGDSleep();
@@ -219,6 +225,27 @@ function removeAllOutlines() {
 
 function setReturn(message) {
 	self.postMessage(message);
+}
+
+function checkPageContext(node) {
+	if(isInsideIframe(node)) {
+		pageContext = getCssSelector(node.ownerDocument.defaultView.frameElement);
+		return `pageContext(` + pageContext + `);\n`;
+	} else {
+		if(pageContext !== '') {
+			pageContext = '';
+			return 'pageContext();\n';
+		}
+	}
+	pageContext = '';
+	return "";
+}
+
+function isInsideIframe(node) {
+	if(node.ownerDocument.defaultView.frameElement)
+		return true;
+	else
+		return false;
 }
 
 function toast(message) {
