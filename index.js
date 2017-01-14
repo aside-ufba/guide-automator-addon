@@ -14,6 +14,8 @@ var popupGuideAutomator = require("sdk/panel").Panel({
 	 										data.url("css/popup-button.css")],
 	onHide: onPopupGuideAutomatorHide
 });
+var _pageContext = "";
+var _outlineElements = [];
 //var CssLogic = require("resource:///devtools/server/css-logic.js");
 
 //-- END IMPORT SDK's
@@ -29,10 +31,13 @@ function onbuttonGuideAutomatorClicked(state) {
 }
 
 function onContextGetCssSelector(message) {
-	clipboard.set(message);
+	message = JSON.parse(message);
+	clipboard.set(message.result);
 }
 
 function onContextGDFunction(message) {
+	message = JSON.parse(message);
+	message = getGDCommand(message);
 	if(message !== "") {
 		clipboard.set(message);
 		popupGuideAutomator.port.emit("text-received", message);
@@ -184,5 +189,95 @@ popupGuideAutomator.port.on("clear", function() {
 //-- END popupGuideAutomator Comunication
 //
 //-- AUXILIAR FUNCTIONS
+
+function getGDCommand(data) {
+	var result = "";
+	if(data.pageContext && data.command !== "Outline") {
+		if(data.pageContext !== _pageContext)
+			result = `pageContext(` + data.pageContext.toString() + `);\n`;
+		_pageContext = data.pageContext;
+	} else {
+		if(_pageContext !== "") {
+			_pageContext = "";
+			result = `pageContext();\n`;
+		}
+	}
+
+
+	switch(data.command) {
+		case "GetUrl":
+			result += `get(` + data.result[0] + `);`;
+			break;
+		case "Click":
+			result += `click(` + data.result[0] + `);`;
+			break;
+		case "TakeScreenshot":
+			if(_outlineElements.length === 0)
+				result += `takeScreenshot(` + data.result[0] + `);`;
+			else {
+				result += `takeScreenshotOf([` + getAllOutlines() + `],` +
+					'false' + `,` +
+					'true' + `,` +
+					data.result[0] +
+					`);`;
+			}
+			break;
+		case "TakeScreenshotOf":
+			if(_outlineElements.length === 0)
+				result += `takeScreenshotOf(` + data.result[0] + `,` +
+				data.result[1] + `,` +
+				data.result[2] + `,` +
+				data.result[3] +
+				`);`;
+			else {
+				_outlineElements.push(data.result[0]);
+				result += `takeScreenshotOf([` + getAllOutlines() + `],` +
+					'false' + `,` +
+					'true' + `,'` +
+					data.result[3] +
+					`');`;
+			}
+			break;
+		case "FillIn":
+			result += `fillIn(` + data.result[0] + `,` + data.result[1] + `);`;
+			break;
+		case "Submit":
+			result += `submit(` + data.result[0] + `);`;
+			break;
+		case "Wait":
+			result += `wait(` + data.result[0] + `,` + data.result[1] + `);`;
+			break;
+		case "Sleep":
+			result += `sleep(` + data.result[0] + `);`;
+			break;
+		case "Print":
+			result += `console.print(` + data.result[0] + `);`;
+			break;
+		case "Outline":
+			if(data.pageContext)
+				_outlineElements.push([data.result[0], data.pageContext]);
+			else
+				_outlineElements.push(data.result[0]);
+
+			result = "";
+			break;
+		default:
+			result = "";
+	}
+	return result;
+}
+
+function getAllOutlines() {
+	var selectors = [];
+	var nodeOutline = _outlineElements.pop();
+	while(nodeOutline) {
+		if(nodeOutline.constructor === Array)
+			selectors.push("[" + nodeOutline + "]");
+		else
+			selectors.push(nodeOutline);
+		nodeOutline = _outlineElements.pop();
+	}
+	return selectors;
+}
 
 //-- END AUXILIAR FUNCTIONS

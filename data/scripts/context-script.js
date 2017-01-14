@@ -1,5 +1,6 @@
 var outlineElements = [];
 var pageContext = '';
+var dontToast = ['Outline'];
 
 self.on("click", function(node, data) {
 	setReturn(parserCommand(node, data));
@@ -9,6 +10,7 @@ self.on("click", function(node, data) {
 function parserCommand(node, data) {
 	data = JSON.parse(data);
 	var result = "";
+	pageContext = null;
 	switch(data.command) {
 		case "GetCssSelector":
 			result = getCssSelector(node);
@@ -17,27 +19,27 @@ function parserCommand(node, data) {
 			result = getGDUrl();
 			break;
 		case "Click":
-			result = checkPageContext(node);
-			result += getGDClick(node);
+			pageContext = getPageContext(node);
+			result = getGDClick(node);
 			break;
 		case "TakeScreenshot":
 			result = getGDTakeScreenshot();
 			break;
 		case "TakeScreenshotOf":
-			result = checkPageContext(node);
-			result += getGDTakeScreenshotOf(node);
+			pageContext = getPageContext(node);
+			result = getGDTakeScreenshotOf(node);
 			break;
 		case "FillIn":
-			result = checkPageContext(node);
-			result += getGDFillIn(node);
+			pageContext = getPageContext(node);
+			result = getGDFillIn(node);
 			break;
 		case "Submit":
-			result = checkPageContext(node);
-			result += getGDSubmit(node);
+			pageContext = getPageContext(node);
+			result = getGDSubmit(node);
 			break;
 		case "Wait":
-			result = checkPageContext(node);
-			result += getGDWait(node);
+			pageContext = getPageContext(node);
+			result = getGDWait(node);
 			break;
 		case "Sleep":
 			result = getGDSleep();
@@ -46,14 +48,19 @@ function parserCommand(node, data) {
 			result = getGDPrint();
 			break;
 		case "Outline":
+			pageContext = getPageContext(node);
 			result = getGDOutline(node);
 			break;
 		default:
 			result = "";
 	}
-	if(result !== "")
+	if(result !== "" && dontToast.indexOf(data.command) === -1)
 		toast("Code copied to clipboard!");
-	return result;
+	return JSON.stringify({
+		command: data.command,
+		result: result,
+		pageContext: pageContext
+	});
 }
 
 function getCssSelector(node) {
@@ -61,65 +68,44 @@ function getCssSelector(node) {
 }
 
 function getGDUrl() {
-	return `get('` + window.location.href + `');`;
+	return [`'` + window.location.href + `'`];
 }
 
 function getGDClick(node) {
 	//Simulação da ação
 	node.click();
 
-	return `click('` + getCssSelector(node) + `');`;
+	return [`'` + getCssSelector(node) + `'`];
 }
 
 function getGDTakeScreenshot() {
 	var width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
-	if(outlineElements.length === 0) {
-		if(!isNullOrEmpty(width))
-			return `takeScreenshot('` + width + `');`;
 
-		return "takeScreenshot();";
-	} else {
-		if(isNullOrEmpty(width))
-			width = "60%";
-		var selectors = removeAllOutlines();
-		return `takeScreenshotOf([` + selectors + `],` +
-			'false' + `,` +
-			'true' + `,'` +
-			width +
-			`');`;
-	}
+	if(outlineElements.length > 0)
+		removeAllOutlines();
+	if(isNullOrEmpty(width))
+		width = "60%";
+	return [`'` + width + `'`];
 }
 
 function getGDTakeScreenshotOf(node) {
-	var width, cssSelector;
-	if(outlineElements.length === 0) {
-		cssSelector = getCssSelector(node);
-		var crop = customYesNoQuestion("Want to crop the image based on the element?");
-		var outline = customYesNoQuestion("Want to outline the element?");
-		width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
-		if(isNullOrEmpty(width))
-			width = "60%";
+	var width, cssSelector, crop, outline;
 
-		return `takeScreenshotOf('` + cssSelector + `',` +
-			crop.toString() + `,` +
-			outline.toString() + `,'` +
-			width +
-			`');`;
+	cssSelector = getCssSelector(node);
+	crop = customYesNoQuestion("Want to crop the image based on the element?").toString();
+	outline = customYesNoQuestion("Want to outline the element?").toString();
+	width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
+	if(isNullOrEmpty(width))
+		width = "60%";
 
-	} else {
+	if(outlineElements.length > 0)
+		removeAllOutlines();
 
-		width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
-		if(isNullOrEmpty(width))
-			width = "60%";
-		outlineElements.push(node);
-
-		var selectors = removeAllOutlines();
-		return `takeScreenshotOf([` + selectors + `],` +
-			'false' + `,` +
-			'true' + `,'` +
-			width +
-			`');`;
-	}
+	return [`'` + cssSelector + `'`,
+					crop,
+					outline,
+					`'` + width + `'`
+					];
 }
 
 function getGDFillIn(node) {
@@ -130,7 +116,7 @@ function getGDFillIn(node) {
 	//Simulação da ação
 	node.value = message;
 
-	return `fillIn('` + cssSelector + `','` + message.toString() + `');`;
+	return [`'` + cssSelector + `'`, `'` + message.toString() + `'`];
 }
 
 function getGDSubmit(node) {
@@ -147,7 +133,7 @@ function getGDSubmit(node) {
 		node.submit();
 	} catch(e) {}
 
-	return `submit('` + cssSelector + `');`;
+	return [`'` + cssSelector + `'`];
 }
 
 function getGDWait(node) {
@@ -163,7 +149,7 @@ function getGDWait(node) {
 		document.body.style.cursor = cursor;
 	}, 1000);
 
-	return `wait('` + cssSelector + `',` + timeOut + `);`;
+	return [`'` + cssSelector + `'`, timeOut];
 }
 
 function getGDSleep() {
@@ -178,18 +164,18 @@ function getGDSleep() {
 		document.body.style.cursor = cursor;
 	}, 1000);
 
-	return `sleep('` + time.toString().trim() + `');`;
+	return [sleep];
 }
 
 function getGDPrint() {
 	var message = customPrompt("Write your message");
-	return `console.print('` + message.toString() + `');`;
+	return [`'` + message.toString() + `'`];
 }
 
 function getGDOutline(node) {
 	node.style.outline = 'solid red 3px';
 	outlineElements.push(node);
-	return "";
+	return [`'` + getCssSelector(node) + `'`];
 }
 
 
@@ -213,32 +199,22 @@ function isNullOrEmpty(variable) {
 }
 
 function removeAllOutlines() {
-	var selectors = [];
 	var nodeOutline = outlineElements.pop();
 	while(nodeOutline) {
-		selectors.push(`'` + getCssSelector(nodeOutline) + `'`);
 		nodeOutline.style.outline = '';
 		nodeOutline = outlineElements.pop();
 	}
-	return selectors;
 }
 
 function setReturn(message) {
 	self.postMessage(message);
 }
 
-function checkPageContext(node) {
+function getPageContext(node) {
 	if(isInsideIframe(node)) {
-		pageContext = getCssSelector(node.ownerDocument.defaultView.frameElement);
-		return `pageContext(` + pageContext + `);\n`;
-	} else {
-		if(pageContext !== '') {
-			pageContext = '';
-			return 'pageContext();\n';
-		}
+		return "'" + getCssSelector(node.ownerDocument.defaultView.frameElement) + "'";
 	}
-	pageContext = '';
-	return "";
+	return null;
 }
 
 function isInsideIframe(node) {
