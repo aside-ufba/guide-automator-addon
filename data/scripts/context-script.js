@@ -95,8 +95,15 @@ function getGDTakeScreenshotOf(node) {
 	var width, cssSelector, crop, outline;
 
 	cssSelector = getCssSelector(node);
-	crop = customYesNoQuestion("Want to crop the image based on the element?").toString();
-	outline = customYesNoQuestion("Want to outline the element?").toString();
+
+	//Only works if elements are on same context
+	if(outlineElements.length === 0) {
+		crop = customYesNoQuestion("Want to crop the image based on the element?").toString();
+		outline = customYesNoQuestion("Want to outline the element?").toString();
+	} else {
+		crop = 'false';
+		outline = 'true';
+	}
 	width = customPrompt("Size of screenshot? (Default: 60%)", "60%");
 	if(isNullOrEmpty(width))
 		width = "60%";

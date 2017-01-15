@@ -230,12 +230,15 @@ function getGDCommand(data) {
 				data.result[3] +
 				`);`;
 			else {
-				_outlineElements.push(data.result[0]);
+				if(data.pageContext)
+					_outlineElements.push([data.result[0], data.pageContext]);
+				else
+					_outlineElements.push(data.result[0]);
 				result += `takeScreenshotOf([` + getAllOutlines() + `],` +
 					'false' + `,` +
-					'true' + `,'` +
+					'true' + `,` +
 					data.result[3] +
-					`');`;
+					`);`;
 			}
 			break;
 		case "FillIn":
