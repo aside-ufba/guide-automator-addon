@@ -16,7 +16,7 @@ function parserCommand(node, data) {
 			result = getCssSelector(node);
 			break;
 		case "GetUrl":
-			result = getGDUrl();
+			result = getGDUrl(node);
 			break;
 		case "Click":
 			pageContext = getPageContext(node);
@@ -67,8 +67,11 @@ function getCssSelector(node) {
 	return findCssSelector(node);
 }
 
-function getGDUrl() {
-	return [`'` + window.location.href + `'`];
+function getGDUrl(node) {
+	if(!isInsideIframe(node))
+		return [`'` + window.location.href + `'`];
+	else
+		return [`'` + parent.window.location.href + `'`];
 }
 
 function getGDClick(node) {
