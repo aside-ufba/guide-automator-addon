@@ -80,6 +80,9 @@ function executeCommandGD(commandId) {
 		case "GDprint":
 			addText("console.print('Text');");
 			break;
+		case "GDpageContext":
+			addText("pageContext('Iframe-CssSelector');");
+			break;
 		default:
 			break;
 

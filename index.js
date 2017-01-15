@@ -7,7 +7,7 @@ var contextMenu = require("sdk/context-menu");
 var clipboard = require("sdk/clipboard");
 var popupGuideAutomator = require("sdk/panel").Panel({
 	width: 620,
-	height: 450,
+	height: 490,
 	contentURL: data.url("html/popup-button.html"),
 	contentScriptFile: [data.url("lib/toast.min.js"), data.url("scripts/popup-middleware.js")],
 	contentStyleFile: [data.url("lib/w3.css"),
