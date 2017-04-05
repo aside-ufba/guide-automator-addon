@@ -5,7 +5,7 @@ self.port.on("show", function onShow() {
 });
 
 self.port.on("text-received", function onShow(text) {
-	if(text)
+	if (text)
 		addText(text);
 });
 
@@ -21,7 +21,7 @@ document.querySelectorAll('#bottom-panel > button')
 	});
 
 function executeCommandButton(buttonId) {
-	switch(buttonId) {
+	switch (buttonId) {
 		case "Clear":
 			clearText();
 			self.port.emit("clear");
@@ -29,6 +29,12 @@ function executeCommandButton(buttonId) {
 		case "Copy":
 			text = getTextWithTags().toString();
 			toast("Code copied to clipboard!");
+			self.port.emit("CopyMessage", text);
+			break;
+		case "Cut":
+			text = getTextWithTags().toString();
+			toast("Code copied to clipboard!");
+			clearText();
 			self.port.emit("CopyMessage", text);
 			break;
 		case "NPM":
@@ -47,12 +53,12 @@ document.querySelectorAll('#left-panel > ul > li')
 			.addEventListener('click', function() {
 				executeCommandGD(this.id);
 			});
-		if(element.id)
+		if (element.id)
 			element.style.cursor = 'pointer';
 	});
 
 function executeCommandGD(commandId) {
-	switch(commandId) {
+	switch (commandId) {
 		case "GDget":
 			addText("get('http://example.com');");
 			break;

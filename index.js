@@ -23,7 +23,7 @@ var _outlineElements = [];
 //-- EVENT OF ADDON ELEMENT
 
 function onbuttonGuideAutomatorClicked(state) {
-	if(state.checked) {
+	if (state.checked) {
 		popupGuideAutomator.show({
 			position: button
 		});
@@ -38,7 +38,7 @@ function onContextGetCssSelector(message) {
 function onContextGDFunction(message) {
 	message = JSON.parse(message);
 	message = getGDCommand(message);
-	if(message !== "") {
+	if (message !== "") {
 		clipboard.set(message);
 		popupGuideAutomator.port.emit("text-received", message);
 	}
@@ -172,7 +172,7 @@ popupGuideAutomator.port.on("hideMessage", function(text) {
 });
 
 popupGuideAutomator.port.on("CopyMessage", function(text) {
-	if(text !== "") {
+	if (text !== "") {
 		clipboard.set(text);
 	}
 });
@@ -192,19 +192,19 @@ popupGuideAutomator.port.on("clear", function() {
 
 function getGDCommand(data) {
 	var result = "";
-	if(data.pageContext && data.command !== "Outline") {
-		if(data.pageContext !== _pageContext)
+	if (data.pageContext && data.command !== "Outline") {
+		if (data.pageContext !== _pageContext)
 			result = `pageContext(` + data.pageContext.toString() + `);\n`;
 		_pageContext = data.pageContext;
 	} else {
-		if(_pageContext !== "") {
+		if (_pageContext !== "") {
 			_pageContext = "";
 			result = `pageContext();\n`;
 		}
 	}
 
 
-	switch(data.command) {
+	switch (data.command) {
 		case "GetUrl":
 			result += `get(` + data.result[0] + `);`;
 			break;
@@ -212,7 +212,7 @@ function getGDCommand(data) {
 			result += `click(` + data.result[0] + `);`;
 			break;
 		case "TakeScreenshot":
-			if(_outlineElements.length === 0)
+			if (_outlineElements.length === 0)
 				result += `takeScreenshot(` + data.result[0] + `);`;
 			else {
 				result += `takeScreenshotOf([` + getAllOutlines() + `],` +
@@ -223,14 +223,14 @@ function getGDCommand(data) {
 			}
 			break;
 		case "TakeScreenshotOf":
-			if(_outlineElements.length === 0)
+			if (_outlineElements.length === 0)
 				result += `takeScreenshotOf(` + data.result[0] + `,` +
 				data.result[1] + `,` +
 				data.result[2] + `,` +
 				data.result[3] +
 				`);`;
 			else {
-				if(data.pageContext)
+				if (data.pageContext)
 					_outlineElements.push([data.result[0], data.pageContext]);
 				else
 					_outlineElements.push(data.result[0]);
@@ -257,7 +257,7 @@ function getGDCommand(data) {
 			result += `console.print(` + data.result[0] + `);`;
 			break;
 		case "Outline":
-			if(data.pageContext)
+			if (data.pageContext)
 				_outlineElements.push([data.result[0], data.pageContext]);
 			else
 				_outlineElements.push(data.result[0]);
@@ -272,13 +272,13 @@ function getGDCommand(data) {
 
 function getAllOutlines() {
 	var selectors = [];
-	var nodeOutline = _outlineElements.pop();
-	while(nodeOutline) {
-		if(nodeOutline.constructor === Array)
+	var nodeOutline = _outlineElements.shift();
+	while (nodeOutline) {
+		if (nodeOutline.constructor === Array)
 			selectors.push("[" + nodeOutline + "]");
 		else
 			selectors.push(nodeOutline);
-		nodeOutline = _outlineElements.pop();
+		nodeOutline = _outlineElements.shift();
 	}
 	return selectors;
 }
